@@ -1,5 +1,19 @@
 pipeline {
-    agent any
+
+    agent {
+        node {
+            label 'master'
+        }
+    }
+    stage('Code Checkout') {
+            steps {
+                checkout([
+                    $class: 'GitSCM', 
+                    branches: [[name: '*/master']], 
+                    userRemoteConfigs: [[url: '']]
+                ])
+            }
+        }
 
     stages {
         stage('Build') {
@@ -21,4 +35,3 @@ pipeline {
             }
         }
     }
-}
