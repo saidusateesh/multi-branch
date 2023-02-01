@@ -1,0 +1,19 @@
+on: 
+  pull_request:
+    types: [opened, synchronize, reopened]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: success()
+    steps:
+    - name: Trigger Jenkins Build
+      uses: actions/checkout@v2
+ 
+
+    - name: Set Jenkins build status
+      run: |
+        curl -X POST \
+        -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+        -H "Accept: application/vnd.github+json" \
+        -d '{ "state": "success", "context": "jenkins/build", "target_url": "http://3.144.112.92:8080/job/multi-branch" }' \
+          https://api.github.com/repos/${{ github.repository }}/statuses/${{ github.sha }}
